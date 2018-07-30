@@ -8,6 +8,7 @@ import {environment} from '../environments/environment';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
+  selectedFile: File;
 
   constructor() {}
 
@@ -31,10 +32,16 @@ export class AppComponent implements OnInit{
 
     console.log('selected filename: ', file.name);
     console.log('selected file object: ', file);
+
+    this.selectedFile = file;
   }
 
   uploadSingle() {
+    const metaData = {'contentType': this.selectedFile.type};
+    const storageRef: firebase.storage.Reference = firebase.storage().ref(`/upload-v1/attachments/${this.selectedFile.name}`);
+    storageRef.put(this.selectedFile, metaData);
 
+    console.log('File uploaded successfully!! Filename is ', this.selectedFile.name);
   }
 
   uploadMultiple() {
