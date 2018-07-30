@@ -9,6 +9,7 @@ import {environment} from '../environments/environment';
 })
 export class AppComponent implements OnInit{
   selectedFile: File;
+  imageFilePath: string;
 
   constructor() {}
 
@@ -39,7 +40,43 @@ export class AppComponent implements OnInit{
   uploadSingle() {
     const metaData = {'contentType': this.selectedFile.type};
     const storageRef: firebase.storage.Reference = firebase.storage().ref(`/upload-v1/attachments/${this.selectedFile.name}`);
-    storageRef.put(this.selectedFile, metaData);
+
+
+    /* store file into firebase storage & get its  download URL at the same time */
+    storageRef.put(this.selectedFile, metaData)
+      .then(
+      (data: any) => {
+        console.log('uploaded file...', data);
+        console.log('getDownloadURL() method, gives you a promise...', data.ref.getDownloadURL());
+        data.ref.getDownloadURL().then(
+          (dlUrl: any) => {
+            console.log('download URL (upon upload retrieve from promise)...', dlUrl);
+            this.imageFilePath = dlUrl;
+          }
+        );
+      }
+    )
+      .catch(
+        (error: any) => {
+          console.log('upload error...', error);
+        }
+      );
+
+
+    /* getting file download URL by specifying the file path */
+    /*
+    firebase.storage().ref('/upload-v1/attachments/huubaper-chris.jpg').getDownloadURL()
+      .then(
+        (dlURL: any) => {
+          console.log('download URL...', dlURL);
+        }
+      )
+      .catch(
+        (error: any) => {
+          console.log('getDlURL...', error);
+        }
+      );
+    */
 
     console.log('File uploaded successfully!! Filename is ', this.selectedFile.name);
   }
