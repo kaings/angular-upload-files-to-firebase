@@ -7,9 +7,11 @@ import {environment} from '../environments/environment';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   selectedFile: File;
   imageFilePath: string;
+  featuredPhotoStream: Promise<string>;
+
 
   constructor() {}
 
@@ -48,12 +50,17 @@ export class AppComponent implements OnInit{
       (data: any) => {
         console.log('uploaded file...', data);
         console.log('getDownloadURL() method, gives you a promise...', data.ref.getDownloadURL());
+
+        this.featuredPhotoStream = data.ref.getDownloadURL();
+
         data.ref.getDownloadURL().then(
           (dlUrl: any) => {
             console.log('download URL (upon upload retrieve from promise)...', dlUrl);
             this.imageFilePath = dlUrl;
           }
         );
+
+
       }
     )
       .catch(
