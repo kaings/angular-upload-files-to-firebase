@@ -1,11 +1,19 @@
-<div class="container">
+<div class="container my-5">
   <div class="row">
     <div class="form-group col-md-8 col-xs-12">
       <label>Upload File(s) to Firebase: </label>
-      <input type="file" class="form-control" (change)="onSelect($event)">
-      <button class="btn btn-primary" (click)="uploadSingle()">Upload 1 File</button>
-      <button class="btn btn-warning" (click)="uploadMultiple()">Upload Multiple Files</button>
+      <input type="file" class="form-control mb-2" (change)="onSelect($event)">
+      <button class="btn btn-primary mx-2" (click)="uploadSingle()">Upload Single File</button>
+      <button class="btn btn-info mx-2" (click)="uploadMultiple()">Upload Multiple Files</button>
     </div>
   </div>
 
+  <div class="row">
+    <img [src]="imageFilePath" [alt]="selectedFile?.name"> <!-- selectedFile?.name means display the filename if selectedFile is available -->
+  </div>
+
+  <!-- using async pipe to parse the data string from promise -->
+  <div class="row">
+    <img [src]="featuredPhotoStream | async" [alt]="selectedFile?.name"> <!-- selectedFile?.name means display the filename if selectedFile is available -->
+  </div>
 </div>
